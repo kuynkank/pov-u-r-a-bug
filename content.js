@@ -1,33 +1,20 @@
 (function() {
-    let zoomLevel = 1;
+    // Listen for messages from the extension popup
+    chrome.runtime.onMessage.addListener((message) => {
+        if (message.zoom) {
+            applyAntPerspective(parseFloat(message.zoom));
+        }
+    });
 
-    window.addEventListener('wheel', (e) => {
+    function applyAntPerspective(zoomLevel) {
         const html = document.documentElement;
         const body = document.body;
         if (!html || !body) return;
 
-        if (!e.shiftKey) {
-            return;
-        }
-        
-        e.preventDefault();
-
-        //Capture mouse position
-        const mouseX = e.pageX;
-        const mouseY = e.pageY;
-
-        //Zoom level
-        const sensitivity = 0.1;
-        const oldLevel = zoomLevel;
-        if (e.deltaY < 0) {
-            zoomLevel += sensitivity;
-        } else {
-            zoomLevel = Math.max(1, zoomLevel - sensitivity);
-        }
 
         html.style.perspective = "1000px"; // Lower = more extreme triangle
         html.style.perspectiveOrigin = "50% 0%"; // Keeps the "vanishing point" at the top center
-        const tiltAngle = Math.min((zoomLevel - 1) * 3, 60);
+        const tiltAngle = Math.min((zoomLevel - 1) * 3, 45);
 
         // Apply zoom to body
         body.style.transformOrigin = '0 0'; //helps site stay in scrollable area
@@ -36,26 +23,22 @@
 
         // Locking
         if (zoomLevel > 1) {
-            // Enable scrollbars
-            html.style.width = `${100 * zoomLevel}vw`;
-            html.style.height = `${100 * zoomLevel}vh`;
-            html.style.overflow = 'auto';
-            //Lock layout at zoomed
-            body.style.width = '100vw';
-            body.style.position = 'absolute';
-        } else {
-            html.style.width = '';
-            html.style.height = '';
-            body.style.position = '';
-        }
+        // Enable scrollbars
+        html.style.width = `${100 * zoomLevel}vw`;
+        html.style.height = `${100 * zoomLevel}vh`;
+        html.style.overflow = 'auto';        
+        //Lock layout at zoomed
+        body.style.width = '100vw';
+        body.style.position = 'absolute';
 
-        // Scroll the window to keep the mouse point centered
         const ratio = zoomLevel / oldLevel;
-        const newScrollX = mouseX * ratio - e.clientX;
-        const newScrollY = mouseY * ratio - e.clientY;
-
-        window.scrollTo(newScrollX, newScrollY);
-
-    }, { passive: false });
-
-})();
+        window.scrollTo(window.scrollX * ratio, window.scrollY * ratio);
+        
+        } else {
+                html.style.width = '';
+                html.style.height = '';
+                body.style.position = '';
+            }
+        }
+    }
+)();
