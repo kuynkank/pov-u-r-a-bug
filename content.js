@@ -1,6 +1,32 @@
 (function() {
     let zoomLevel = 1;
 
+    const vCursor = document.createElement('div');
+    vCursor.id = 'v-cursor';
+
+    Object.assign(vCursor.style, {
+        position: 'fixed',
+        width: '40px',
+        height: '40px',
+        backgroundImage: `url(${chrome.runtime.getURL("ladybug.png")})`, // Image by pngtree.com
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        pointerEvents: 'none',
+        zIndex: '2147483647',
+        left: '0',
+        top: '0',
+        transform: 'translate(-50%, -50%)',
+        transition: 'none',
+        display: 'block'
+    });
+
+    document.documentElement.appendChild(vCursor);
+
+    window.addEventListener('mousemove', (e) => {
+        vCursor.style.left = `${e.clientX}px`;
+        vCursor.style.top = `${e.clientY}px`;
+    });
+
     window.addEventListener('wheel', (e) => {
         const html = document.documentElement;
         const body = document.body;
