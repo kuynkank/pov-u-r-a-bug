@@ -14,11 +14,11 @@
 
         html.style.perspective = "1000px"; // Lower = more extreme triangle
         html.style.perspectiveOrigin = "50% 0%"; // Keeps the "vanishing point" at the top center
-        const tiltAngle = Math.min((zoomLevel - 1) * 3, 45);
+        // const tiltAngle = Math.min((zoomLevel - 1) * 3, 45);
 
         // Apply zoom to body
         body.style.transformOrigin = '0 0'; //helps site stay in scrollable area
-        body.style.transform = `scale(${zoomLevel}) rotateX(-${tiltAngle}deg)`;
+        body.style.transform = `scale(${zoomLevel})`;
         body.style.transition = "none";
 
         // Locking
