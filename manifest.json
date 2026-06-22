@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Close Up Online",
+    "name": "POV: You're A Bug",
     "version": "1.0",
     "description": "Seeing everything up close",
     "permissions": ["storage"],
@@ -17,7 +17,13 @@
         "run_at": "document_idle"
       }
     ],
+    "icons": {
+      "16": "ladybug.png",
+      "48": "ladybug.png",
+      "128": "ladybug.png"
+    },
     "action": {
-      "default_title": "Close Up"
+      "default_title": "Close Up",
+      "default_icon": "ladybug.png"
     }
   }
