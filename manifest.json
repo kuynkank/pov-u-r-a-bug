@@ -3,7 +3,7 @@
     "name": "POV: You're A Bug",
     "version": "1.0",
     "description": "Seeing everything up close",
-"web_accessible_resources": [
+    "web_accessible_resources": [
         {
           "resources": ["ladybug.png"],
           "matches": ["<all_urls>"]
