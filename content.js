@@ -1,5 +1,6 @@
 (function() {
     let zoomLevel = 1;
+    let enabled = true;
 
     const vCursor = document.createElement('div');
     vCursor.id = 'v-cursor';
@@ -23,11 +24,13 @@
     document.documentElement.appendChild(vCursor);
 
     window.addEventListener('mousemove', (e) => {
+        if (!enabled) return;
         vCursor.style.left = `${e.clientX}px`;
         vCursor.style.top = `${e.clientY}px`;
     });
 
     window.addEventListener('wheel', (e) => {
+        if (!enabled) return;
         const html = document.documentElement;
         const body = document.body;
         if (!html || !body) return;
@@ -35,7 +38,7 @@
         if (!e.shiftKey) {
             return;
         }
-        
+
         e.preventDefault();
 
         //Capture mouse position
@@ -79,5 +82,29 @@
         window.scrollTo(newScrollX, newScrollY);
 
     }, { passive: false });
+
+    function setEnabled(val) {
+        enabled = val;
+        vCursor.style.display = enabled ? 'block' : 'none';
+        if (!enabled) {
+            // Reset zoom when turning off
+            const html = document.documentElement;
+            const body = document.body;
+            body.style.transform = '';
+            body.style.transformOrigin = '';
+            body.style.width = '';
+            body.style.position = '';
+            html.style.width = '';
+            html.style.height = '';
+            html.style.overflow = '';
+            zoomLevel = 1;
+        }
+    }
+
+    chrome.runtime.onMessage.addListener((msg) => {
+        if (msg.type === "toggle") {
+            setEnabled(msg.enabled);
+        }
+    });
 
 })();
